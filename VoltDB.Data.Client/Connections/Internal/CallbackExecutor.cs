@@ -36,6 +36,7 @@ namespace VoltDB.Data.Client
     /// </summary>
     public class CallbackExecutor
     {
+        private CancellationTokenSource _stopTokenSource = new CancellationTokenSource();
         /// <summary>
         /// Simple workItem object holding a reference to a callback and the state object with which it will be called.
         /// </summary>
@@ -152,10 +153,11 @@ namespace VoltDB.Data.Client
                 if (count > 0)
                     Thread.Sleep(100);
             }
-            for (int i = 0; i < this.Threads.Length; i++)
-            {
-                this.Threads[i].Abort();
-            }
+            _stopTokenSource.Cancel();
+            //for (int i = 0; i < this.Threads.Length; i++)
+            //{
+            //    this.Threads[i].Abort();
+            //}
 
         }
         /// <summary>
@@ -183,6 +185,8 @@ namespace VoltDB.Data.Client
                     lock (this.SyncRoot)
                         if (this.Queue.Count > 0)
                             item = this.Queue.Dequeue();
+                   if (_stopTokenSource.Token.IsCancellationRequested)
+                     break;
 
                     // Sleep a while if we have nothing to do.  This might cause some delays in triggering of the
                     // callbacks, but at the benefit of lowering vastly the CPU footprint (and associated context
