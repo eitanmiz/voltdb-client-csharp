@@ -29,7 +29,7 @@ using System.Linq;
 namespace VoltDB.Data.Client
 {
     /// <summary>
-    /// A very simplistic, managed thread pool providing support for callback execution and offering the best
+    /// Very simplistic, managed thread pool providing support for callback execution and offering the best
     /// performance/CPU footprint compromise.  An equivalent method would be to use the ThreadPool (as the first
     /// version of the library did), but forcing MaxWorkerThreads to MinWorkerThread, however, this would also
     /// impact all client aplications since the ThreadPool is unfortunally a shared object.
